@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
 
-function connectToDB(){
-  mongoose.connect(process.env.DB_CONNECT).then(() => {
-    console.log('Connected to DB');
-  }).catch(err => console.log(err));
-}
+async function connectToDB(){
+  const uri = process.env.DB_CONNECT;
+  if (!uri) {
+    throw new Error('DB_CONNECT is not defined');
+  }
 
+  await mongoose.connect(uri, {
+    dbName: 'uberclone',
+    serverSelectionTimeoutMS: 10000,
+  });
+
+  console.log('Connected to DB');
+}
 
 module.exports = connectToDB;
